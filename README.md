@@ -11,7 +11,10 @@ ex. ` python find_email_addresses.py web.mit.edu`
 
 and then crawls all connected webpages whose URLs begin with `http://web.mit.edu`  
 
-At each page, the crawler stores any email addresses that it finds, and when done, prints them to stdout. 
+At each page, the crawler stores any email addresses that it finds, and when done, prints them to stdout.   
+
+Note: Where applicable, addresses should begin with the “www” subdomain.  
+ex. Use `www.google.com` instead of `google.com` 
 
 #### Implementation
 
