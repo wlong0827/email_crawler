@@ -4,6 +4,7 @@ import requests
 import re
 import sys
 
+# Starting URL should be first argument from sys
 start_url = sys.argv[1]
 if not start_url.startswith("http://"):
 	start_url = "http://" + start_url 
@@ -22,16 +23,20 @@ while q:
 
 	soup = BeautifulSoup(r.text, 'html.parser')
 
-	# extract all email addresses and add them into the resulting set
+	# Extract all email addresses and add them into the resulting set
 	new_emails = set(re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", r.text, re.I))
 	emails.update(new_emails)
 
+	# Iterate over all links found on the page
 	for link in soup.find_all('a'):
+
+		# It's possible to see 'a' elements without 'href'
 		try:		
 			new_url = link.attrs["href"]
 		except:
 			break
 
+		# Truncate extraneous slashes
 		if new_url.startswith("//"):
 			new_url = new_url[2:]
 
@@ -42,6 +47,7 @@ while q:
 		if not new_url.startswith("http://"):
 			new_url = "http://" + new_url 
 
+		# Ensure that we stay in one domain and don't search pdf files
 		if new_url.startswith(start_url) and not "pdf" in new_url:
 			if not new_url in urls_seen and not new_url in q:
 				# print "Queuing", new_url 
