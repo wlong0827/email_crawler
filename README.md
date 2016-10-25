@@ -26,11 +26,13 @@ ex. Use `www.google.com` instead of `google.com`
 
 #### Dependencies
 `find_email_addresses.py` makes use of the following dependencies, all of which should come included with Python:
-- BeautifulSoup (bs4)
 - Collections (deque)
-- Requests (requests)
 - Regular Expressions (re)
 - System (sys)
+
+It also makes use of the following dependencies not included with Python (see requirements.txt):
+- Requests (requests)
+- Beautiful Soup (bs4)
 
 #### Contact
 

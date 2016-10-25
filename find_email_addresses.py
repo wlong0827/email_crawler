@@ -9,12 +9,20 @@ start_url = sys.argv[1]
 if not start_url.startswith("http://"):
 	start_url = "http://" + start_url 
 
+if len(sys.argv) == 3:
+	max_crawl_depth = sys.argv[2]
+else:
+	max_crawl_depth = float("inf")
+
 q = deque([start_url])
 
 urls_seen = set([])
 emails = set([])
+crawl_depth = 0
+file_extensions = ["pdf", "mp4", "csv", "xls", "mp3", "doc", "png", "gif"]
 
-while q:
+while q and crawl_depth < max_crawl_depth:
+	crawl_depth += 1
 	url = q.popleft()
 	urls_seen.add(url)
 
@@ -31,10 +39,10 @@ while q:
 	for link in soup.find_all('a'):
 
 		# It's possible to see 'a' elements without 'href'
-		try:		
+		if link.attrs["href"]:
 			new_url = link.attrs["href"]
-		except:
-			break
+		else:
+			continue
 
 		# Truncate extraneous slashes
 		if new_url.startswith("//"):
@@ -47,10 +55,14 @@ while q:
 		if not new_url.startswith("http://"):
 			new_url = "http://" + new_url 
 
+		for extension in file_extensions:
+			if extension in new_url[len(start_url):]:
+				new_url = ""
+
 		# Ensure that we stay in one domain and don't search pdf files
-		if new_url.startswith(start_url) and not "pdf" in new_url:
+		if new_url.startswith(start_url):
 			if not new_url in urls_seen and not new_url in q:
-				# print "Queuing", new_url 
+				print "Queuing", new_url 
 				q.append(new_url)
 
 print "Found these email addresses"
